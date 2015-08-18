@@ -1,0 +1,79 @@
+---
+title: "Regression Models Assignment"
+author: "Thomas Sacchetti"
+date: "August 15, 2015"
+output: pdf_document
+---
+#Exevutive Summary
+
+This project works with the mtcars data set. In this project we will examine the impact of transmission type on the miles per gallon. The dataset comes from a report from motortrend that contains 32 different models. The variable for transmission is reported as am and takes the value of 0 or 1, where 0 corresponds to automatic and 1 corresponds to manual. The t test confirms there is a signifigant relationship between between the two variables. From the linear model we can see that there is a gain of about 7 MPG to use a manual transmission on the 32 models tested. We can see a correlation between the weight of the car and the transmission type, which could potentially decrease the correlation.
+
+#Load and Preprocess the Data
+```{r}
+library(knitr)
+data(mtcars)
+dim(mtcars)
+```
+```{r,results= "hide"}
+table(summary(is.na(mtcars)))
+lapply(mtcars,class)
+```
+
+Now we know that there are no NA variables and that the data set has dimensions 32x11. Similarly we know that the column class is numeric for all values. We will now proceed to examine correlations between mpg and transmission. 
+
+#Statistical Insight
+
+```{r}
+test = t.test(mpg~am,data= mtcars)
+test$p.value
+test$estimate
+```
+From the T test we get a P value of .00137, thus we are able to reject the null hypothesis and proceed to examine the effect of the transmission on MPG. We can see from the estimate the mean of automatic cars transmission is about 7 MPG worse than a manual.
+
+#Linear Modeling
+We will now proceed to develop and test accuracy of various linear models from the data provided.
+
+The first model we will test will be the simple fit model 
+
+```{r}
+lm.trans= lm(mpg~am, data = mtcars)
+summary(lm.trans)
+```
+We can see that the model accounts for 34% of the change, and works at the 95% confidence interval. Now we look at several slightly improved models.
+
+We will begin by looking at the basic model against all variables.
+```{r}
+lm.gen = lm(mpg~., data = mtcars)
+summary(lm.gen)
+```
+From the above model we can see that it accounts for about 80% of the change of the MPG, but none of the variables are signifiganct at the 95% confidence interval. Now we will eliminate the variables that are covariant.
+```{r,results="hide"}
+imp.gen <- step(lm.gen, k=log(nrow(mtcars)))
+```
+```{r}
+summary(imp.gen)
+```
+We can see the model has improved where the new model now accounts for the 83% of the change on MPG. Additionally we can see that see that all variables are siginifigant under the 95% confidence interval.
+
+From the above above we will select the improved general model because each variable is signifigant and it explains the largest of change in MPG.
+
+#Residual Analysis and Diagnostics
+There are 4 standard types of error to check for in regression plots. See the Appendix for the graphics of the below phenomena. 
+
+1. The Residual Plot shows no trends.\s\s
+
+2. The normal Q-Q plot shows no negative trends.\s\s
+
+3. The Scale Location plot shows no abnormal variation.\s\s
+
+4. The Residuals and Leverage plot shows no outliers.\s\s
+
+#Appendix for Graphics
+1. Pairwise Graphic for visualization
+```{r}
+pairs(mtcars,panel = panel.smooth,main="Pairwise Inference")
+par(mfrow=c(2,2))
+plot(imp.gen)
+```
+
+
