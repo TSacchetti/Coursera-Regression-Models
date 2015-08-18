@@ -2,7 +2,9 @@
 title: "Regression Models Assignment"
 author: "Thomas Sacchetti"
 date: "August 15, 2015"
-output: pdf_document
+output: 
+  pdf_document: 
+    latex_engine: xelatex
 ---
 #Exevutive Summary
 
@@ -11,6 +13,7 @@ This project works with the mtcars data set. In this project we will examine the
 #Load and Preprocess the Data
 ```{r}
 library(knitr)
+library(rmarkdown)
 data(mtcars)
 dim(mtcars)
 ```
@@ -60,13 +63,13 @@ From the above above we will select the improved general model because each vari
 #Residual Analysis and Diagnostics
 There are 4 standard types of error to check for in regression plots. See the Appendix for the graphics of the below phenomena. 
 
-1. The Residual Plot shows no trends.\s\s
+1. The Residual Plot shows no trends.
 
-2. The normal Q-Q plot shows no negative trends.\s\s
+2. The normal Q-Q plot shows no negative trends.
 
-3. The Scale Location plot shows no abnormal variation.\s\s
+3. The Scale Location plot shows no abnormal variation.
 
-4. The Residuals and Leverage plot shows no outliers.\s\s
+4. The Residuals and Leverage plot shows no outliers.
 
 #Appendix for Graphics
 1. Pairwise Graphic for visualization
